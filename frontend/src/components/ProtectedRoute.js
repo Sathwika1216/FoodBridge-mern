@@ -1,0 +1,33 @@
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import LoadingSpinner from './LoadingSpinner';
+
+const ProtectedRoute = ({ children, roles }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="page-center">
+        <LoadingSpinner label="Checking session..." />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (roles && !roles.includes(user.role)) {
+    const redirect =
+      user.role === 'donor'
+        ? '/donor/dashboard'
+        : user.role === 'ngo'
+          ? '/ngo/dashboard'
+          : '/admin/dashboard';
+    return <Navigate to={redirect} replace />;
+  }
+
+  return children;
+};
+
+export default ProtectedRoute;
