@@ -50,3 +50,4 @@ jobs:
             cd ~/FoodBridge-mern
             docker compose pull
             docker compose up -d
+            docker compose restart nginx
